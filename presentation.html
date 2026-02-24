@@ -142,7 +142,7 @@
         }
 
         .slide-subtitle {
-            font-size: clamp(0.85rem, 1.5vw, 1.1rem);
+            font-size: clamp(1rem, 1.8vw, 1.3rem);
             color: var(--secondary);
             margin-bottom: clamp(1rem, 2.5vh, 2rem);
             line-height: 1.5;
@@ -249,14 +249,14 @@
         }
 
         .card-role {
-            font-size: clamp(0.65rem, 1vw, 0.8rem);
+            font-size: clamp(0.75rem, 1.2vw, 0.95rem);
             color: var(--secondary);
             margin-bottom: 0.15em;
             letter-spacing: 0.05em;
         }
 
         .card-name {
-            font-size: clamp(0.85rem, 1.4vw, 1.05rem);
+            font-size: clamp(1rem, 1.6vw, 1.2rem);
             font-weight: 700;
             line-height: 1.3;
         }
@@ -268,13 +268,13 @@
         }
 
         .card-label {
-            font-size: clamp(0.7rem, 1.1vw, 0.85rem);
+            font-size: clamp(0.8rem, 1.3vw, 1rem);
             color: var(--secondary);
             line-height: 1.4;
         }
 
         .card-mc {
-            font-size: clamp(0.55rem, 0.8vw, 0.65rem);
+            font-size: clamp(0.65rem, 0.95vw, 0.78rem);
             color: var(--green);
             margin-top: 0.2em;
             letter-spacing: 0.05em;
@@ -282,6 +282,31 @@
 
         .card-mc.red {
             color: var(--red);
+        }
+
+        .card-photo {
+            width: clamp(48px, 6vw, 72px);
+            height: clamp(48px, 6vw, 72px);
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid;
+            margin-bottom: 0.3em;
+        }
+
+        .green-card .card-photo {
+            border-color: var(--green);
+            box-shadow: 0 0 12px rgba(57, 255, 20, 0.2);
+        }
+
+        .red-card .card-photo,
+        .red-mc .card-photo {
+            border-color: var(--red);
+            box-shadow: 0 0 12px rgba(255, 32, 32, 0.2);
+        }
+
+        .green-mc .card-photo {
+            border-color: var(--green);
+            box-shadow: 0 0 12px rgba(57, 255, 20, 0.2);
         }
 
         /* ============================================================
@@ -307,7 +332,7 @@
         }
 
         .team-label {
-            font-size: clamp(0.55rem, 0.9vw, 0.7rem);
+            font-size: clamp(0.65rem, 1.1vw, 0.85rem);
             letter-spacing: 0.2em;
             text-transform: uppercase;
             margin-bottom: 0.3em;
@@ -338,14 +363,14 @@
         }
 
         .info-item {
-            font-size: clamp(0.65rem, 1vw, 0.8rem);
+            font-size: clamp(0.8rem, 1.2vw, 0.95rem);
             color: var(--secondary);
         }
 
         .info-item strong {
             color: var(--white);
             display: block;
-            font-size: clamp(0.8rem, 1.3vw, 1rem);
+            font-size: clamp(0.95rem, 1.5vw, 1.15rem);
         }
 
         /* ============================================================
@@ -391,7 +416,7 @@
         }
 
         .charge-num {
-            font-size: clamp(0.6rem, 0.9vw, 0.75rem);
+            font-size: clamp(0.7rem, 1.1vw, 0.9rem);
             color: var(--red);
             text-shadow: var(--red-glow);
             font-weight: 800;
@@ -400,14 +425,14 @@
         }
 
         .charge-title {
-            font-size: clamp(0.85rem, 1.3vw, 1.05rem);
+            font-size: clamp(1rem, 1.5vw, 1.2rem);
             font-weight: 700;
             margin-bottom: 0.3em;
             line-height: 1.3;
         }
 
         .charge-desc {
-            font-size: clamp(0.7rem, 1vw, 0.8rem);
+            font-size: clamp(0.8rem, 1.2vw, 0.95rem);
             color: var(--secondary);
             line-height: 1.4;
         }
@@ -441,7 +466,7 @@
         }
 
         .mc-card .mc-team-label {
-            font-size: clamp(0.6rem, 0.9vw, 0.75rem);
+            font-size: clamp(0.7rem, 1.1vw, 0.9rem);
             letter-spacing: 0.15em;
             margin-bottom: 0.5em;
         }
@@ -453,13 +478,13 @@
         }
 
         .mc-card .mc-side {
-            font-size: clamp(0.7rem, 1vw, 0.85rem);
+            font-size: clamp(0.8rem, 1.2vw, 1rem);
             color: var(--secondary);
         }
 
         .mc-note {
             margin-top: clamp(1rem, 2vh, 1.5rem);
-            font-size: clamp(0.75rem, 1.1vw, 0.9rem);
+            font-size: clamp(0.85rem, 1.3vw, 1.05rem);
             color: var(--secondary);
         }
 
@@ -652,7 +677,7 @@
         }
 
         .props-list li {
-            font-size: clamp(0.7rem, 1vw, 0.8rem);
+            font-size: clamp(0.8rem, 1.2vw, 0.95rem);
             color: #ccc;
             padding-left: 1em;
             position: relative;
@@ -689,7 +714,7 @@
         }
 
         .timeline-num {
-            font-size: clamp(0.6rem, 0.9vw, 0.75rem);
+            font-size: clamp(0.7rem, 1.1vw, 0.9rem);
             color: var(--secondary);
             width: 1.5em;
             text-align: right;
@@ -712,7 +737,7 @@
         }
 
         .timeline-bar-label {
-            font-size: clamp(0.6rem, 0.95vw, 0.78rem);
+            font-size: clamp(0.7rem, 1.1vw, 0.9rem);
             font-weight: 700;
             position: relative;
             z-index: 1;
@@ -720,7 +745,7 @@
         }
 
         .timeline-time {
-            font-size: clamp(0.55rem, 0.8vw, 0.7rem);
+            font-size: clamp(0.65rem, 1vw, 0.85rem);
             color: var(--secondary);
             width: clamp(40px, 6vw, 60px);
             text-align: right;
@@ -730,7 +755,7 @@
         .timeline-total {
             text-align: right;
             margin-top: clamp(0.4rem, 1vh, 0.6rem);
-            font-size: clamp(0.75rem, 1.1vw, 0.9rem);
+            font-size: clamp(0.85rem, 1.3vw, 1.05rem);
             font-weight: 700;
             color: var(--secondary);
         }
@@ -759,7 +784,7 @@
         }
 
         .detail-time {
-            font-size: clamp(0.7rem, 1vw, 0.85rem);
+            font-size: clamp(0.8rem, 1.2vw, 1rem);
             font-weight: 800;
             color: var(--green);
             white-space: nowrap;
@@ -772,13 +797,13 @@
         }
 
         .detail-content h3 {
-            font-size: clamp(0.85rem, 1.3vw, 1.05rem);
+            font-size: clamp(1rem, 1.5vw, 1.2rem);
             font-weight: 700;
             margin-bottom: 0.2em;
         }
 
         .detail-content p {
-            font-size: clamp(0.7rem, 1vw, 0.8rem);
+            font-size: clamp(0.8rem, 1.2vw, 0.95rem);
             color: var(--secondary);
             line-height: 1.4;
         }
@@ -818,13 +843,13 @@
         }
 
         .participation-title {
-            font-size: clamp(0.8rem, 1.2vw, 0.95rem);
+            font-size: clamp(0.9rem, 1.4vw, 1.1rem);
             font-weight: 700;
             margin-bottom: 0.3em;
         }
 
         .participation-desc {
-            font-size: clamp(0.65rem, 0.9vw, 0.78rem);
+            font-size: clamp(0.75rem, 1.1vw, 0.9rem);
             color: var(--secondary);
             line-height: 1.4;
         }
@@ -849,15 +874,8 @@
             max-width: 90%;
         }
 
-        .shout:nth-child(2) {
-            color: var(--red);
-            text-shadow: var(--red-glow);
-        }
-
         .shout:nth-child(3) {
             font-size: clamp(1rem, 3vw, 2rem);
-            color: var(--white);
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
         }
 
         /* ============================================================
@@ -1160,27 +1178,33 @@
     <div class="slide-inner">
         <h2 class="slide-title">ทีมโจทก์ — <span class="accent-green">ประชาชน</span> <span style="font-size:0.6em; color:var(--secondary);">6 คน</span></h2>
         <div class="team-grid-6 stagger">
-            <div class="card green-card">
+            <div class="card green-card" style="text-align:center;">
+                <img class="card-photo" src="photos/nuhring.jpg" alt="พี่หนูหริ่ง สมบัติ บุญฯ">
                 <div class="card-role">ผู้นำประชาชนตัวจี๊ด</div>
                 <div class="card-name accent-green">พี่หนูหริ่ง สมบัติ บุญฯ</div>
             </div>
-            <div class="card green-card">
+            <div class="card green-card" style="text-align:center;">
+                <img class="card-photo" src="photos/baimin.jpg" alt="ใบมิ้น Vote 62">
                 <div class="card-role">สายเนิร์ดข้อมูลแน่น</div>
                 <div class="card-name accent-green">ใบมิ้น Vote 62</div>
             </div>
-            <div class="card green-card">
+            <div class="card green-card" style="text-align:center;">
+                <img class="card-photo" src="photos/seen.jpg" alt="ซีน ThumbRight">
                 <div class="card-role">คนธรรมดา</div>
                 <div class="card-name accent-green">ซีน ThumbRight</div>
             </div>
-            <div class="card green-card">
+            <div class="card green-card" style="text-align:center;">
+                <img class="card-photo" src="photos/tum.jpg" alt="อาจารย์ตั้ม">
                 <div class="card-role">ชาวเน็ตหน้าใส</div>
                 <div class="card-name accent-green">อาจารย์ตั้ม</div>
             </div>
-            <div class="card green-card">
+            <div class="card green-card" style="text-align:center;">
+                <img class="card-photo" src="photos/nimit.jpg" alt="พี่นิมิตร์ เครือข่ายฯ">
                 <div class="card-role">สายแอคทีวิส</div>
                 <div class="card-name accent-green">พี่นิมิตร์ เครือข่ายฯ</div>
             </div>
-            <div class="card green-card">
+            <div class="card green-card" style="text-align:center;">
+                <img class="card-photo" src="photos/mai.jpg" alt="มาย ภัสฯ">
                 <div class="card-role">วัยรุ่น</div>
                 <div class="card-name accent-green">มาย ภัสฯ</div>
                 <div class="card-mc">MC ร่วม</div>
@@ -1198,24 +1222,29 @@
     <div class="slide-inner">
         <h2 class="slide-title">ทีมจำเลย — <span class="accent-red">กกต.</span> <span style="font-size:0.6em; color:var(--secondary);">5 คน</span></h2>
         <div class="team-grid-5 stagger">
-            <div class="card red-card">
+            <div class="card red-card" style="text-align:center;">
+                <img class="card-photo" src="photos/pao.jpg" alt="เป๋า iLaw">
                 <div class="card-role">หัวหน้า กกต.</div>
                 <div class="card-name accent-red">เป๋า iLaw</div>
             </div>
-            <div class="card red-card">
+            <div class="card red-card" style="text-align:center;">
+                <img class="card-photo" src="photos/ou.jpg" alt="อู๋ ครช.">
                 <div class="card-role">กกต. นิติกร</div>
                 <div class="card-name accent-red">อู๋ ครช.</div>
                 <div class="card-mc red">MC ร่วม</div>
             </div>
-            <div class="card red-card">
+            <div class="card red-card" style="text-align:center;">
+                <img class="card-photo" src="photos/neng_tune.jpg" alt="เหน่ง Tune & Co.">
                 <div class="card-role">กกต. คนดี</div>
                 <div class="card-name accent-red">เหน่ง Tune & Co.</div>
             </div>
-            <div class="card red-card">
+            <div class="card red-card" style="text-align:center;">
+                <img class="card-photo" src="photos/neng_taxi.jpg" alt="พี่เหน่ง Taxi">
                 <div class="card-role">กกต. หน้ามึน</div>
                 <div class="card-name accent-red">พี่เหน่ง Taxi</div>
             </div>
-            <div class="card red-card">
+            <div class="card red-card" style="text-align:center;">
+                <img class="card-photo" src="photos/jiw.jpg" alt="พี่จิ๋ว Call">
                 <div class="card-role">กกต. สายข้าราชการ</div>
                 <div class="card-name accent-red">พี่จิ๋ว Call</div>
             </div>
@@ -1234,12 +1263,14 @@
         <h2 class="slide-title">พิธีกร</h2>
         <p class="slide-subtitle">MC ดำเนินรายการร่วมกัน</p>
         <div class="mc-row stagger">
-            <div class="mc-card red-mc">
+            <div class="mc-card red-mc" style="text-align:center;">
+                <img class="card-photo" src="photos/ou.jpg" alt="อู๋ ครช." style="width:clamp(64px,8vw,96px);height:clamp(64px,8vw,96px);">
                 <div class="mc-team-label accent-red">ฝั่งจำเลย</div>
                 <div class="mc-name accent-red">อู๋ ครช.</div>
                 <div class="mc-side">กกต. นิติกร</div>
             </div>
-            <div class="mc-card green-mc">
+            <div class="mc-card green-mc" style="text-align:center;">
+                <img class="card-photo" src="photos/mai.jpg" alt="มาย ภัสฯ" style="width:clamp(64px,8vw,96px);height:clamp(64px,8vw,96px);">
                 <div class="mc-team-label accent-green">ฝั่งโจทก์</div>
                 <div class="mc-name accent-green">มาย ภัสฯ</div>
                 <div class="mc-side">ประชาชนวัยรุ่น</div>
@@ -1493,7 +1524,6 @@
      ============================================================ -->
 <section class="slide" id="slide-13" data-slide="13">
     <div class="glow-green"></div>
-    <div class="glow-red"></div>
     <div class="slide-inner">
         <h2 class="slide-title" style="margin-bottom: clamp(1.5rem, 4vh, 2.5rem);">คำตะโกน<span class="accent-green">ปิดท้าย</span></h2>
         <div class="shouts stagger">
