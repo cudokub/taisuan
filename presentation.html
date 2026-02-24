@@ -1,0 +1,1669 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ไต่สวนสาธารณะ — Team Briefing</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700;800;900&family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================================
+           RESET & BASE
+           ============================================================ */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            scroll-behavior: smooth;
+            height: 100%;
+        }
+
+        body {
+            font-family: 'Noto Sans Thai', 'Sarabun', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            min-height: 100%;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ============================================================
+           DESIGN TOKENS
+           ============================================================ */
+        :root {
+            --bg: #0a0a0a;
+            --white: #ffffff;
+            --secondary: #888888;
+            --muted: #555555;
+            --border: #222222;
+            --card-bg: #111111;
+            --card-border: #1a1a1a;
+
+            /* Team colors */
+            --green: #39ff14;
+            --green-glow: 0 0 20px rgba(57, 255, 20, 0.4), 0 0 40px rgba(57, 255, 20, 0.15);
+            --green-bg-glow: rgba(57, 255, 20, 0.06);
+            --green-border: rgba(57, 255, 20, 0.25);
+            --green-border-hover: rgba(57, 255, 20, 0.4);
+
+            --red: #ff2020;
+            --red-glow: 0 0 20px rgba(255, 32, 32, 0.5), 0 0 40px rgba(255, 32, 32, 0.2);
+            --red-bg-glow: rgba(255, 32, 32, 0.08);
+            --red-border: rgba(255, 32, 32, 0.25);
+            --red-border-hover: rgba(255, 32, 32, 0.4);
+
+            /* Spacing */
+            --slide-pad-x: clamp(1.5rem, 5vw, 5rem);
+            --slide-pad-y: clamp(1.5rem, 4vh, 3rem);
+        }
+
+        /* ============================================================
+           TOP STRIPE (green + red alternating)
+           ============================================================ */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: repeating-linear-gradient(
+                90deg,
+                var(--green) 0px, var(--green) 40px,
+                var(--red) 40px, var(--red) 80px
+            );
+            z-index: 1000;
+        }
+
+        /* ============================================================
+           SLIDE BASE
+           ============================================================ */
+        .slide {
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
+            scroll-snap-align: start;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: var(--slide-pad-y) var(--slide-pad-x);
+            padding-top: calc(var(--slide-pad-y) + 6px); /* account for stripe */
+        }
+
+        .slide-inner {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 1100px;
+            text-align: center;
+        }
+
+        /* ============================================================
+           AMBIENT GLOWS
+           ============================================================ */
+        .glow-green {
+            position: absolute;
+            top: 15%;
+            left: -15%;
+            width: 55%;
+            height: 70%;
+            background: radial-gradient(ellipse, var(--green-bg-glow) 0%, transparent 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .glow-red {
+            position: absolute;
+            top: 15%;
+            right: -15%;
+            width: 55%;
+            height: 70%;
+            background: radial-gradient(ellipse, var(--red-bg-glow) 0%, transparent 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ============================================================
+           TYPOGRAPHY
+           ============================================================ */
+        .slide-title {
+            font-size: clamp(1.6rem, 4vw, 2.8rem);
+            font-weight: 900;
+            margin-bottom: clamp(0.8rem, 2vh, 1.5rem);
+            line-height: 1.2;
+        }
+
+        .slide-subtitle {
+            font-size: clamp(0.85rem, 1.5vw, 1.1rem);
+            color: var(--secondary);
+            margin-bottom: clamp(1rem, 2.5vh, 2rem);
+            line-height: 1.5;
+        }
+
+        .accent-green {
+            color: var(--green);
+            text-shadow: var(--green-glow);
+        }
+
+        .accent-red {
+            color: var(--red);
+            text-shadow: var(--red-glow);
+        }
+
+        .highlight-green {
+            background: var(--green);
+            color: var(--bg);
+            padding: 0 0.15em;
+            display: inline-block;
+            text-shadow: none;
+        }
+
+        /* ============================================================
+           ANIMATIONS — scroll-triggered via .visible
+           ============================================================ */
+        .slide .slide-inner {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .slide.visible .slide-inner {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Staggered children */
+        .stagger > * {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .slide.visible .stagger > *:nth-child(1) { transition-delay: 0.1s; opacity: 1; transform: translateY(0); }
+        .slide.visible .stagger > *:nth-child(2) { transition-delay: 0.2s; opacity: 1; transform: translateY(0); }
+        .slide.visible .stagger > *:nth-child(3) { transition-delay: 0.3s; opacity: 1; transform: translateY(0); }
+        .slide.visible .stagger > *:nth-child(4) { transition-delay: 0.4s; opacity: 1; transform: translateY(0); }
+        .slide.visible .stagger > *:nth-child(5) { transition-delay: 0.5s; opacity: 1; transform: translateY(0); }
+        .slide.visible .stagger > *:nth-child(6) { transition-delay: 0.6s; opacity: 1; transform: translateY(0); }
+        .slide.visible .stagger > *:nth-child(7) { transition-delay: 0.7s; opacity: 1; transform: translateY(0); }
+        .slide.visible .stagger > *:nth-child(8) { transition-delay: 0.8s; opacity: 1; transform: translateY(0); }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            .slide .slide-inner,
+            .stagger > * {
+                opacity: 1;
+                transform: none;
+                transition: none;
+            }
+            html {
+                scroll-behavior: auto;
+            }
+        }
+
+        /* ============================================================
+           CARDS — generic
+           ============================================================ */
+        .cards-grid {
+            display: grid;
+            gap: clamp(0.5rem, 1.2vh, 0.8rem);
+        }
+
+        .cards-grid.cols-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .cards-grid.cols-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: clamp(0.7rem, 1.5vh, 1.2rem) clamp(0.8rem, 1.5vw, 1.2rem);
+            text-align: left;
+            transition: border-color 0.3s ease;
+        }
+
+        .card.green-card {
+            border-color: var(--green-border);
+        }
+        .card.green-card:hover {
+            border-color: var(--green-border-hover);
+        }
+
+        .card.red-card {
+            border-color: var(--red-border);
+        }
+        .card.red-card:hover {
+            border-color: var(--red-border-hover);
+        }
+
+        .card-role {
+            font-size: clamp(0.65rem, 1vw, 0.8rem);
+            color: var(--secondary);
+            margin-bottom: 0.15em;
+            letter-spacing: 0.05em;
+        }
+
+        .card-name {
+            font-size: clamp(0.85rem, 1.4vw, 1.05rem);
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        .card-number {
+            font-size: clamp(1.2rem, 2vw, 1.6rem);
+            font-weight: 900;
+            margin-bottom: 0.2em;
+        }
+
+        .card-label {
+            font-size: clamp(0.7rem, 1.1vw, 0.85rem);
+            color: var(--secondary);
+            line-height: 1.4;
+        }
+
+        .card-mc {
+            font-size: clamp(0.55rem, 0.8vw, 0.65rem);
+            color: var(--green);
+            margin-top: 0.2em;
+            letter-spacing: 0.05em;
+        }
+
+        .card-mc.red {
+            color: var(--red);
+        }
+
+        /* ============================================================
+           SLIDE 1 — TITLE
+           ============================================================ */
+        .title-h1 {
+            font-size: clamp(3rem, 9vw, 7rem);
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: clamp(0.5rem, 2vh, 1rem);
+        }
+
+        .versus-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(1rem, 3vw, 2.5rem);
+            margin-bottom: clamp(1rem, 3vh, 2rem);
+        }
+
+        .team {
+            text-align: center;
+        }
+
+        .team-label {
+            font-size: clamp(0.55rem, 0.9vw, 0.7rem);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 0.3em;
+            color: var(--secondary);
+        }
+
+        .team-name {
+            font-size: clamp(1.1rem, 2.8vw, 1.8rem);
+            font-weight: 900;
+        }
+
+        .vs-badge {
+            font-size: clamp(0.85rem, 1.8vw, 1.3rem);
+            font-weight: 800;
+            color: var(--muted);
+            padding: 0.3em 0.6em;
+            border: 2px solid #333;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: center;
+            gap: clamp(1rem, 3vw, 3rem);
+            margin-top: clamp(0.8rem, 2vh, 1.5rem);
+            flex-wrap: wrap;
+        }
+
+        .info-item {
+            font-size: clamp(0.65rem, 1vw, 0.8rem);
+            color: var(--secondary);
+        }
+
+        .info-item strong {
+            color: var(--white);
+            display: block;
+            font-size: clamp(0.8rem, 1.3vw, 1rem);
+        }
+
+        /* ============================================================
+           SLIDE 2 — GOALS
+           ============================================================ */
+        .goal-card {
+            display: flex;
+            align-items: flex-start;
+            gap: clamp(0.8rem, 1.5vw, 1.2rem);
+            text-align: left;
+        }
+
+        .goal-number {
+            font-size: clamp(1.5rem, 3vw, 2.2rem);
+            font-weight: 900;
+            color: var(--green);
+            text-shadow: var(--green-glow);
+            flex-shrink: 0;
+            line-height: 1;
+            min-width: 1.5em;
+            text-align: center;
+        }
+
+        .goal-text {
+            font-size: clamp(0.9rem, 1.5vw, 1.15rem);
+            line-height: 1.5;
+            padding-top: 0.15em;
+        }
+
+        .goals-list {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(1rem, 2.5vh, 2rem);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* ============================================================
+           SLIDE 3 — CHARGES
+           ============================================================ */
+        .charge-card {
+            text-align: left;
+        }
+
+        .charge-num {
+            font-size: clamp(0.6rem, 0.9vw, 0.75rem);
+            color: var(--red);
+            text-shadow: var(--red-glow);
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.3em;
+        }
+
+        .charge-title {
+            font-size: clamp(0.85rem, 1.3vw, 1.05rem);
+            font-weight: 700;
+            margin-bottom: 0.3em;
+            line-height: 1.3;
+        }
+
+        .charge-desc {
+            font-size: clamp(0.7rem, 1vw, 0.8rem);
+            color: var(--secondary);
+            line-height: 1.4;
+        }
+
+        /* ============================================================
+           SLIDE 6 — MC
+           ============================================================ */
+        .mc-row {
+            display: flex;
+            justify-content: center;
+            gap: clamp(1.5rem, 4vw, 4rem);
+            flex-wrap: wrap;
+        }
+
+        .mc-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: clamp(1.5rem, 3vh, 2.5rem) clamp(1.5rem, 3vw, 3rem);
+            text-align: center;
+            min-width: clamp(180px, 30vw, 280px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mc-card.green-mc {
+            border: 1px solid var(--green-border);
+        }
+
+        .mc-card.red-mc {
+            border: 1px solid var(--red-border);
+        }
+
+        .mc-card .mc-team-label {
+            font-size: clamp(0.6rem, 0.9vw, 0.75rem);
+            letter-spacing: 0.15em;
+            margin-bottom: 0.5em;
+        }
+
+        .mc-card .mc-name {
+            font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+            font-weight: 900;
+            margin-bottom: 0.3em;
+        }
+
+        .mc-card .mc-side {
+            font-size: clamp(0.7rem, 1vw, 0.85rem);
+            color: var(--secondary);
+        }
+
+        .mc-note {
+            margin-top: clamp(1rem, 2vh, 1.5rem);
+            font-size: clamp(0.75rem, 1.1vw, 0.9rem);
+            color: var(--secondary);
+        }
+
+        /* ============================================================
+           SLIDE 7 — STAGE LAYOUT (CSS diagram)
+           ============================================================ */
+        .stage-container {
+            display: flex;
+            gap: clamp(1rem, 3vw, 2rem);
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+        .stage-diagram {
+            flex: 1.3;
+            min-width: 300px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: clamp(0.8rem, 1.5vh, 1.2rem) clamp(1rem, 2vw, 1.5rem);
+            position: relative;
+        }
+
+        .stage-label {
+            font-size: clamp(0.55rem, 0.8vw, 0.65rem);
+            color: var(--secondary);
+            letter-spacing: 0.15em;
+            text-align: center;
+            margin-bottom: clamp(0.3rem, 0.8vh, 0.6rem);
+        }
+
+        /* Back of stage — whiteboard + table */
+        .stage-back {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: clamp(0.5rem, 1vw, 1rem);
+            margin-bottom: clamp(0.4rem, 1vh, 0.8rem);
+            padding-bottom: clamp(0.3rem, 0.6vh, 0.5rem);
+            border-bottom: 1px dashed #333;
+        }
+
+        .stage-back-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.2rem;
+        }
+
+        .stage-back-item .icon {
+            width: clamp(40px, 6vw, 56px);
+            height: clamp(20px, 3vh, 28px);
+            border: 1.5px solid #555;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(0.4rem, 0.6vw, 0.5rem);
+            color: #888;
+            background: rgba(255,255,255,0.03);
+        }
+
+        .stage-back-item .icon-label {
+            font-size: clamp(0.45rem, 0.65vw, 0.55rem);
+            color: var(--secondary);
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .stage-back-evidence {
+            font-size: clamp(0.4rem, 0.6vw, 0.48rem);
+            color: var(--muted);
+            text-align: center;
+            margin-top: -0.1rem;
+        }
+
+        /* Main stage floor — cluster layout */
+        .stage-floor {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: clamp(1.2rem, 3vw, 2.5rem);
+            margin-bottom: clamp(0.4rem, 1vh, 0.6rem);
+            position: relative;
+        }
+
+        /* Stage entrance indicator */
+        .stage-entrance {
+            position: absolute;
+            left: -0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.15rem;
+        }
+
+        .stage-entrance-arrow {
+            font-size: clamp(0.7rem, 1vw, 0.9rem);
+            color: #555;
+        }
+
+        .stage-entrance-label {
+            writing-mode: vertical-rl;
+            font-size: clamp(0.35rem, 0.55vw, 0.45rem);
+            color: #555;
+            letter-spacing: 0.1em;
+        }
+
+        .stage-team {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .stage-team-label {
+            font-size: clamp(0.55rem, 0.8vw, 0.65rem);
+            font-weight: 700;
+            letter-spacing: 0.1em;
+        }
+
+        /* Cluster arrangement of seats (3-2-1 or 2-2-2 pattern) */
+        .stage-seats-cluster {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .seat-row {
+            display: flex;
+            gap: 0.3rem;
+        }
+
+        .seat {
+            width: clamp(14px, 2vw, 20px);
+            height: clamp(14px, 2vw, 20px);
+            border-radius: 50%;
+            border: 2px solid;
+        }
+
+        .seat.green-seat { border-color: var(--green); background: rgba(57, 255, 20, 0.15); }
+        .seat.red-seat { border-color: var(--red); background: rgba(255, 32, 32, 0.15); }
+
+        .stage-mic {
+            font-size: clamp(0.45rem, 0.65vw, 0.55rem);
+            color: var(--secondary);
+            margin-top: 0.2rem;
+        }
+
+        .stage-divider-v {
+            width: 1px;
+            height: clamp(50px, 8vh, 70px);
+            background: #333;
+        }
+
+        /* Audience zone */
+        .stage-audience {
+            text-align: center;
+            padding: clamp(0.3rem, 0.8vh, 0.5rem);
+            border-top: 2px solid #333;
+            margin-top: clamp(0.2rem, 0.5vh, 0.3rem);
+            position: relative;
+        }
+
+        .stage-audience span {
+            font-size: clamp(0.5rem, 0.75vw, 0.6rem);
+            color: var(--secondary);
+        }
+
+        .stage-audience .audience-note {
+            display: block;
+            font-size: clamp(0.4rem, 0.6vw, 0.48rem);
+            color: var(--muted);
+            margin-top: 0.15rem;
+        }
+
+        .props-list {
+            flex: 1;
+            min-width: 260px;
+        }
+
+        .props-list ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.25rem, 0.5vh, 0.4rem);
+        }
+
+        .props-list li {
+            font-size: clamp(0.7rem, 1vw, 0.8rem);
+            color: #ccc;
+            padding-left: 1em;
+            position: relative;
+            line-height: 1.4;
+        }
+
+        .props-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.5em;
+            width: 5px;
+            height: 5px;
+            background: var(--secondary);
+            border-radius: 50%;
+        }
+
+        /* ============================================================
+           SLIDE 8 — TIMELINE
+           ============================================================ */
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.3rem, 0.6vh, 0.5rem);
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .timeline-block {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 1vw, 1rem);
+        }
+
+        .timeline-num {
+            font-size: clamp(0.6rem, 0.9vw, 0.75rem);
+            color: var(--secondary);
+            width: 1.5em;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .timeline-bar-container {
+            flex: 1;
+            position: relative;
+        }
+
+        .timeline-bar {
+            height: clamp(28px, 4vh, 40px);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            padding: 0 clamp(0.5rem, 1vw, 0.8rem);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .timeline-bar-label {
+            font-size: clamp(0.6rem, 0.95vw, 0.78rem);
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+            white-space: nowrap;
+        }
+
+        .timeline-time {
+            font-size: clamp(0.55rem, 0.8vw, 0.7rem);
+            color: var(--secondary);
+            width: clamp(40px, 6vw, 60px);
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .timeline-total {
+            text-align: right;
+            margin-top: clamp(0.4rem, 1vh, 0.6rem);
+            font-size: clamp(0.75rem, 1.1vw, 0.9rem);
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        /* ============================================================
+           SLIDES 9-11 — DETAIL BLOCKS
+           ============================================================ */
+        .detail-blocks {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.6rem, 1.5vh, 1rem);
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .detail-block {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: clamp(0.8rem, 1.5vh, 1.2rem) clamp(1rem, 2vw, 1.5rem);
+            display: flex;
+            align-items: flex-start;
+            gap: clamp(0.8rem, 1.5vw, 1.2rem);
+            text-align: left;
+        }
+
+        .detail-time {
+            font-size: clamp(0.7rem, 1vw, 0.85rem);
+            font-weight: 800;
+            color: var(--green);
+            white-space: nowrap;
+            flex-shrink: 0;
+            min-width: clamp(50px, 8vw, 70px);
+        }
+
+        .detail-time.red-time {
+            color: var(--red);
+        }
+
+        .detail-content h3 {
+            font-size: clamp(0.85rem, 1.3vw, 1.05rem);
+            font-weight: 700;
+            margin-bottom: 0.2em;
+        }
+
+        .detail-content p {
+            font-size: clamp(0.7rem, 1vw, 0.8rem);
+            color: var(--secondary);
+            line-height: 1.4;
+        }
+
+        .detail-emphasis {
+            border-color: var(--green-border) !important;
+            background: linear-gradient(135deg, rgba(57, 255, 20, 0.03) 0%, var(--card-bg) 100%);
+        }
+
+        .detail-emphasis.red-emphasis {
+            border-color: var(--red-border) !important;
+            background: linear-gradient(135deg, rgba(255, 32, 32, 0.03) 0%, var(--card-bg) 100%);
+        }
+
+        /* ============================================================
+           SLIDE 12 — AUDIENCE PARTICIPATION
+           ============================================================ */
+        .participation-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: clamp(0.5rem, 1.2vw, 1rem);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .participation-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: clamp(1rem, 2vh, 1.5rem) clamp(0.8rem, 1.5vw, 1.2rem);
+            text-align: center;
+        }
+
+        .participation-icon {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            margin-bottom: 0.5em;
+        }
+
+        .participation-title {
+            font-size: clamp(0.8rem, 1.2vw, 0.95rem);
+            font-weight: 700;
+            margin-bottom: 0.3em;
+        }
+
+        .participation-desc {
+            font-size: clamp(0.65rem, 0.9vw, 0.78rem);
+            color: var(--secondary);
+            line-height: 1.4;
+        }
+
+        /* ============================================================
+           SLIDE 13 — SHOUTS
+           ============================================================ */
+        .shouts {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(1rem, 3vh, 2rem);
+            align-items: center;
+        }
+
+        .shout {
+            font-size: clamp(1.5rem, 5vw, 3.5rem);
+            font-weight: 900;
+            color: var(--green);
+            text-shadow: var(--green-glow);
+            line-height: 1.2;
+            text-align: center;
+            max-width: 90%;
+        }
+
+        .shout:nth-child(2) {
+            color: var(--red);
+            text-shadow: var(--red-glow);
+        }
+
+        .shout:nth-child(3) {
+            font-size: clamp(1rem, 3vw, 2rem);
+            color: var(--white);
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        /* ============================================================
+           PROGRESS BAR
+           ============================================================ */
+        .progress-bar {
+            position: fixed;
+            top: 6px; /* below stripe */
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--green), var(--red));
+            z-index: 1001;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        /* ============================================================
+           NAVIGATION DOTS
+           ============================================================ */
+        .nav-dots {
+            position: fixed;
+            right: clamp(0.5rem, 1.5vw, 1.2rem);
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 999;
+        }
+
+        .nav-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #333;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 0;
+        }
+
+        .nav-dot:hover {
+            background: #666;
+        }
+
+        .nav-dot.active {
+            background: var(--green);
+            box-shadow: 0 0 8px rgba(57, 255, 20, 0.5);
+        }
+
+        /* ============================================================
+           SLIDE NUMBER
+           ============================================================ */
+        .slide-number {
+            position: absolute;
+            bottom: clamp(0.5rem, 1.5vh, 1rem);
+            right: clamp(0.8rem, 2vw, 1.5rem);
+            font-size: clamp(0.55rem, 0.8vw, 0.65rem);
+            color: #333;
+            letter-spacing: 0.1em;
+            z-index: 1;
+        }
+
+        /* ============================================================
+           RESPONSIVE — width
+           ============================================================ */
+        @media (max-width: 600px) {
+            .cards-grid.cols-3 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .cards-grid.cols-3 .card:last-child {
+                grid-column: 1 / -1;
+            }
+            .mc-row {
+                flex-direction: column;
+                align-items: center;
+            }
+            .stage-container {
+                flex-direction: column;
+            }
+            .versus-row {
+                gap: 0.8rem;
+            }
+            .participation-grid {
+                grid-template-columns: 1fr;
+            }
+            .nav-dots {
+                right: 0.3rem;
+                gap: 6px;
+            }
+            .nav-dot {
+                width: 6px;
+                height: 6px;
+            }
+        }
+
+        /* ============================================================
+           RESPONSIVE — height
+           ============================================================ */
+        @media (max-height: 700px) {
+            .slide {
+                padding-top: calc(0.8rem + 6px);
+                padding-bottom: 0.8rem;
+            }
+            .slide-title {
+                font-size: clamp(1.3rem, 3.5vw, 2.2rem);
+                margin-bottom: 0.5rem;
+            }
+            .slide-subtitle {
+                margin-bottom: 0.6rem;
+            }
+            .title-h1 {
+                font-size: clamp(2.2rem, 7vw, 4.5rem);
+            }
+        }
+
+        @media (max-height: 600px) {
+            .slide-title {
+                font-size: clamp(1.1rem, 3vw, 1.8rem);
+                margin-bottom: 0.3rem;
+            }
+            .title-h1 {
+                font-size: clamp(1.8rem, 6vw, 3.5rem);
+            }
+            .goal-number {
+                font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+            }
+            .goals-list {
+                gap: 0.6rem;
+            }
+            .card {
+                padding: 0.5rem 0.6rem;
+            }
+            .cards-grid {
+                gap: 0.35rem;
+            }
+            .shout {
+                font-size: clamp(1.1rem, 3.5vw, 2rem);
+            }
+            .shout:nth-child(3) {
+                font-size: clamp(0.8rem, 2vw, 1.3rem);
+            }
+        }
+
+        @media (max-height: 500px) {
+            .title-h1 {
+                font-size: clamp(1.5rem, 5vw, 2.5rem);
+            }
+            .slide-title {
+                font-size: clamp(1rem, 2.5vw, 1.5rem);
+                margin-bottom: 0.2rem;
+            }
+            .slide-subtitle {
+                font-size: clamp(0.65rem, 1vw, 0.8rem);
+                margin-bottom: 0.3rem;
+            }
+            .versus-row {
+                margin-bottom: 0.5rem;
+            }
+            .info-row {
+                margin-top: 0.3rem;
+            }
+        }
+
+        /* ============================================================
+           TEAM GRID — 6-col and 5-col for team slides
+           ============================================================ */
+        .team-grid-6 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: clamp(0.4rem, 1vh, 0.6rem);
+        }
+
+        .team-grid-5 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: clamp(0.4rem, 1vh, 0.6rem);
+        }
+
+        @media (max-width: 600px) {
+            .team-grid-6,
+            .team-grid-5 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ============================================================
+     PROGRESS BAR
+     ============================================================ -->
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- ============================================================
+     NAVIGATION DOTS
+     ============================================================ -->
+<nav class="nav-dots" id="navDots" aria-label="Slide navigation"></nav>
+
+<!-- ============================================================
+     SLIDE 1 — TITLE
+     ============================================================ -->
+<section class="slide" id="slide-1" data-slide="1">
+    <div class="glow-green"></div>
+    <div class="glow-red"></div>
+    <div class="slide-inner">
+        <div class="versus-row">
+            <div class="team">
+                <div class="team-label">โจทก์</div>
+                <div class="team-name accent-green">ประชาชน</div>
+            </div>
+            <div class="vs-badge">VS</div>
+            <div class="team">
+                <div class="team-label">จำเลย</div>
+                <div class="team-name accent-red">กกต.</div>
+            </div>
+        </div>
+        <h1 class="title-h1">ไต่สวน<span class="highlight-green">สาธารณะ</span></h1>
+        <div class="info-row">
+            <div class="info-item">
+                <strong>25 ก.พ. 2026</strong>
+                18:00 น.
+            </div>
+            <div class="info-item">
+                <strong>หอศิลป์ BACC</strong>
+                กรุงเทพฯ
+            </div>
+            <div class="info-item">
+                <strong>~800 คน</strong>
+                ออฟไลน์
+            </div>
+            <div class="info-item">
+                <strong>90 นาที</strong>
+                role-play
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">01 / 14</div>
+</section>
+
+<!-- ============================================================
+     SLIDE 2 — GOALS
+     ============================================================ -->
+<section class="slide" id="slide-2" data-slide="2">
+    <div class="glow-green"></div>
+    <div class="slide-inner">
+        <h2 class="slide-title"><span class="accent-green">เป้าหมาย</span></h2>
+        <div class="goals-list stagger">
+            <div class="goal-card">
+                <div class="goal-number">1</div>
+                <div class="goal-text">ปลดปล่อย<strong>ความโกรธ ความคับข้องใจ</strong>ของประชาชน</div>
+            </div>
+            <div class="goal-card">
+                <div class="goal-number">2</div>
+                <div class="goal-text">ได้ยิน<strong>คำถาม-คำตอบ</strong>ที่เปิดเผยความผิดปกติของ กกต.</div>
+            </div>
+            <div class="goal-card">
+                <div class="goal-number">3</div>
+                <div class="goal-text">ได้<strong>ถามคำถามที่อยากถาม</strong>ด้วยตัวเอง</div>
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">02 / 14</div>
+</section>
+
+<!-- ============================================================
+     SLIDE 3 — CHARGES
+     ============================================================ -->
+<section class="slide" id="slide-3" data-slide="3">
+    <div class="glow-red"></div>
+    <div class="slide-inner">
+        <h2 class="slide-title">ประเด็น<span class="accent-red">ไต่สวน</span></h2>
+        <p class="slide-subtitle">การทำงานที่ไม่มีประสิทธิภาพและไม่โปร่งใสของ กกต.</p>
+        <div class="cards-grid cols-3 stagger">
+            <div class="card red-card charge-card">
+                <div class="charge-num">ข้อกล่าวหาที่ 1</div>
+                <div class="charge-title">ผลเลือกตั้งไม่ครบ 100%</div>
+                <div class="charge-desc">ผ่านวันเลือกตั้งมา 2 สัปดาห์ ยังไม่รายงานตัวเลขผู้มาใช้สิทธิและผลการเลือกตั้งครบ</div>
+            </div>
+            <div class="card red-card charge-card">
+                <div class="charge-num">ข้อกล่าวหาที่ 2</div>
+                <div class="charge-title">ปัญหาระบบ Barcode</div>
+                <div class="charge-desc">ปัญหาการใช้ Barcode ในกระบวนการเลือกตั้ง</div>
+            </div>
+            <div class="card red-card charge-card">
+                <div class="charge-num">ข้อกล่าวหาที่ 3</div>
+                <div class="charge-title">ข้อขัดแย้งทางกฎหมาย</div>
+                <div class="charge-desc">ประเด็นถกเถียงสาธารณะเรื่องความชอบด้วยกฎหมายและรัฐธรรมนูญ</div>
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">03 / 14</div>
+</section>
+
+<!-- ============================================================
+     SLIDE 4 — PLAINTIFF TEAM (ประชาชน)
+     ============================================================ -->
+<section class="slide" id="slide-4" data-slide="4">
+    <div class="glow-green"></div>
+    <div class="slide-inner">
+        <h2 class="slide-title">ทีมโจทก์ — <span class="accent-green">ประชาชน</span> <span style="font-size:0.6em; color:var(--secondary);">6 คน</span></h2>
+        <div class="team-grid-6 stagger">
+            <div class="card green-card">
+                <div class="card-role">ผู้นำประชาชนตัวจี๊ด</div>
+                <div class="card-name accent-green">พี่หนูหริ่ง สมบัติ บุญฯ</div>
+            </div>
+            <div class="card green-card">
+                <div class="card-role">สายเนิร์ดข้อมูลแน่น</div>
+                <div class="card-name accent-green">ใบมิ้น Vote 62</div>
+            </div>
+            <div class="card green-card">
+                <div class="card-role">คนธรรมดา</div>
+                <div class="card-name accent-green">ซีน ThumbRight</div>
+            </div>
+            <div class="card green-card">
+                <div class="card-role">ชาวเน็ตหน้าใส</div>
+                <div class="card-name accent-green">อาจารย์ตั้ม</div>
+            </div>
+            <div class="card green-card">
+                <div class="card-role">สายแอคทีวิส</div>
+                <div class="card-name accent-green">พี่นิมิตร์ เครือข่ายฯ</div>
+            </div>
+            <div class="card green-card">
+                <div class="card-role">วัยรุ่น</div>
+                <div class="card-name accent-green">มาย ภัสฯ</div>
+                <div class="card-mc">MC ร่วม</div>
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">04 / 14</div>
+</section>
+
+<!-- ============================================================
+     SLIDE 5 — DEFENDANT TEAM (กกต.)
+     ============================================================ -->
+<section class="slide" id="slide-5" data-slide="5">
+    <div class="glow-red"></div>
+    <div class="slide-inner">
+        <h2 class="slide-title">ทีมจำเลย — <span class="accent-red">กกต.</span> <span style="font-size:0.6em; color:var(--secondary);">5 คน</span></h2>
+        <div class="team-grid-5 stagger">
+            <div class="card red-card">
+                <div class="card-role">หัวหน้า กกต.</div>
+                <div class="card-name accent-red">เป๋า iLaw</div>
+            </div>
+            <div class="card red-card">
+                <div class="card-role">กกต. นิติกร</div>
+                <div class="card-name accent-red">อู๋ ครช.</div>
+                <div class="card-mc red">MC ร่วม</div>
+            </div>
+            <div class="card red-card">
+                <div class="card-role">กกต. คนดี</div>
+                <div class="card-name accent-red">เหน่ง Tune & Co.</div>
+            </div>
+            <div class="card red-card">
+                <div class="card-role">กกต. หน้ามึน</div>
+                <div class="card-name accent-red">พี่เหน่ง Taxi</div>
+            </div>
+            <div class="card red-card">
+                <div class="card-role">กกต. สายข้าราชการ</div>
+                <div class="card-name accent-red">พี่จิ๋ว Call</div>
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">05 / 14</div>
+</section>
+
+<!-- ============================================================
+     SLIDE 6 — MC
+     ============================================================ -->
+<section class="slide" id="slide-6" data-slide="6">
+    <div class="glow-green"></div>
+    <div class="glow-red"></div>
+    <div class="slide-inner">
+        <h2 class="slide-title">พิธีกร</h2>
+        <p class="slide-subtitle">MC ดำเนินรายการร่วมกัน</p>
+        <div class="mc-row stagger">
+            <div class="mc-card red-mc">
+                <div class="mc-team-label accent-red">ฝั่งจำเลย</div>
+                <div class="mc-name accent-red">อู๋ ครช.</div>
+                <div class="mc-side">กกต. นิติกร</div>
+            </div>
+            <div class="mc-card green-mc">
+                <div class="mc-team-label accent-green">ฝั่งโจทก์</div>
+                <div class="mc-name accent-green">มาย ภัสฯ</div>
+                <div class="mc-side">ประชาชนวัยรุ่น</div>
+            </div>
+        </div>
+        <p class="mc-note">ดำเนินรายการร่วมกัน ทั้งคู่เป็นทั้งผู้เล่นและพิธีกร</p>
+    </div>
+    <div class="slide-number">06 / 14</div>
+</section>
+
+<!-- ============================================================
+     SLIDE 7 — STAGE & PROPS
+     ============================================================ -->
+<section class="slide" id="slide-7" data-slide="7">
+    <div class="glow-green"></div>
+    <div class="glow-red"></div>
+    <div class="slide-inner">
+        <h2 class="slide-title">เวที & อุปกรณ์</h2>
+        <p class="slide-subtitle">ลาน BACC | เวทีพื้นดำ | ทีมจำเลยใส่สูท</p>
+        <div style="display: flex; gap: clamp(1rem, 2vw, 2rem); align-items: flex-start; flex-wrap: wrap;">
+            <!-- Concept art image -->
+            <div style="flex: 1.4; min-width: 280px;">
+                <img src="stage-concept.png" alt="Concept art ผังเวทีไต่สวนสาธารณะ ลาน BACC"
+                     style="width: 100%; max-height: min(55vh, 450px); object-fit: cover; border-radius: 12px; border: 1px solid #222;">
+            </div>
+            <!-- Props list -->
+            <div class="props-list" style="flex: 0.6; min-width: 200px;">
+                <h3 style="font-size: clamp(0.8rem, 1.2vw, 0.95rem); font-weight:700; margin-bottom: 0.5em;">อุปกรณ์ประกอบ</h3>
+                <ul class="stagger">
+                    <li>ไวท์บอร์ด / กระดานนับคะแนน</li>
+                    <li>โต๊ะหน้าขาว (วางหลักฐาน)</li>
+                    <li>หีบบัตรเลือกตั้ง (เลียนแบบหีบจริง)</li>
+                    <li>บัตรเลือกตั้ง mock-up (เขียว + ชมพู)</li>
+                    <li>ปริ้นท์การนับคะแนน 5/17</li>
+                    <li>ป้ายห้อยคอ "กกต." / "โจทก์"</li>
+                    <li>ขวดน้ำ (ใช้เคาะประท้วง)</li>
+                    <li>ไมค์ stand x2 + ไมค์ลอย x4</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">07 / 14</div>
+</section>
+
+<!-- ============================================================
+     SLIDE 8 — TIMELINE OVERVIEW
+     ============================================================ -->
+<section class="slide" id="slide-8" data-slide="8">
+    <div class="glow-green"></div>
+    <div class="glow-red"></div>
+    <div class="slide-inner">
+        <h2 class="slide-title">ลำดับการแสดง</h2>
+        <p class="slide-subtitle">7 ช่วง รวม 90 นาที</p>
+        <div class="timeline stagger">
+            <!-- Block 1: 5 min = ~5.5% -->
+            <div class="timeline-block">
+                <div class="timeline-num">1</div>
+                <div class="timeline-bar-container">
+                    <div class="timeline-bar" style="width: 12%; background: linear-gradient(90deg, rgba(57,255,20,0.2), rgba(57,255,20,0.1));">
+                        <span class="timeline-bar-label">เปิดเวที</span>
+                    </div>
+                </div>
+                <div class="timeline-time">5 นาที</div>
+            </div>
+            <!-- Block 2: 5 min -->
+            <div class="timeline-block">
+                <div class="timeline-num">2</div>
+                <div class="timeline-bar-container">
+                    <div class="timeline-bar" style="width: 12%; background: linear-gradient(90deg, rgba(255,32,32,0.2), rgba(255,32,32,0.1));">
+                        <span class="timeline-bar-label">จำเลยแถลง</span>
+                    </div>
+                </div>
+                <div class="timeline-time">5 นาที</div>
+            </div>
+            <!-- Block 3: 5 min -->
+            <div class="timeline-block">
+                <div class="timeline-num">3</div>
+                <div class="timeline-bar-container">
+                    <div class="timeline-bar" style="width: 12%; background: linear-gradient(90deg, rgba(57,255,20,0.2), rgba(57,255,20,0.1));">
+                        <span class="timeline-bar-label">โจทก์แย้ง</span>
+                    </div>
+                </div>
+                <div class="timeline-time">5 นาที</div>
+            </div>
+            <!-- Block 4: 40 min = ~44% — MAIN EVENT -->
+            <div class="timeline-block">
+                <div class="timeline-num">4</div>
+                <div class="timeline-bar-container">
+                    <div class="timeline-bar" style="width: 70%; background: linear-gradient(90deg, rgba(57,255,20,0.25), rgba(255,32,32,0.25)); border: 1px solid rgba(57,255,20,0.2);">
+                        <span class="timeline-bar-label" style="font-size: clamp(0.7rem, 1.1vw, 0.9rem);">&#9733; ถกกัน (หลัก)</span>
+                    </div>
+                </div>
+                <div class="timeline-time" style="font-weight:700; color:#fff;">40 นาที</div>
+            </div>
+            <!-- Block 5: 30 min -->
+            <div class="timeline-block">
+                <div class="timeline-num">5</div>
+                <div class="timeline-bar-container">
+                    <div class="timeline-bar" style="width: 55%; background: linear-gradient(90deg, rgba(57,255,20,0.15), rgba(57,255,20,0.08));">
+                        <span class="timeline-bar-label">คนดูถาม</span>
+                    </div>
+                </div>
+                <div class="timeline-time">30 นาที</div>
+            </div>
+            <!-- Block 6: 3 min -->
+            <div class="timeline-block">
+                <div class="timeline-num">6</div>
+                <div class="timeline-bar-container">
+                    <div class="timeline-bar" style="width: 8%; min-width: 90px; background: linear-gradient(90deg, rgba(57,255,20,0.3), rgba(255,32,32,0.3));">
+                        <span class="timeline-bar-label">ตะโกน</span>
+                    </div>
+                </div>
+                <div class="timeline-time">3 นาที</div>
+            </div>
+            <!-- Block 7: 2 min -->
+            <div class="timeline-block">
+                <div class="timeline-num">7</div>
+                <div class="timeline-bar-container">
+                    <div class="timeline-bar" style="width: 6%; min-width: 80px; background: linear-gradient(90deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));">
+                        <span class="timeline-bar-label">ปิดเวที</span>
+                    </div>
+                </div>
+                <div class="timeline-time">2 นาที</div>
+            </div>
+        </div>
+        <div class="timeline-total">รวม 90 นาที</div>
+    </div>
+    <div class="slide-number">08 / 14</div>
+</section>
+
+<!-- ============================================================
+     SLIDE 9 — OPENING (15 min)
+     ============================================================ -->
+<section class="slide" id="slide-9" data-slide="9">
+    <div class="glow-green"></div>
+    <div class="glow-red"></div>
+    <div class="slide-inner">
+        <h2 class="slide-title">ช่วงเปิด <span style="font-size:0.6em; color:var(--secondary);">15 นาที</span></h2>
+        <p class="slide-subtitle">ก้อนที่ 1-3</p>
+        <div class="detail-blocks stagger">
+            <div class="detail-block">
+                <div class="detail-time">5 นาที</div>
+                <div class="detail-content">
+                    <h3>1. เปิดเวที</h3>
+                    <p>MC (อู๋ + มาย) เปิดงาน แนะนำรูปแบบการไต่สวน แนะนำตัวละครทั้งสองฝ่าย</p>
+                </div>
+            </div>
+            <div class="detail-block detail-emphasis red-emphasis">
+                <div class="detail-time red-time">5 นาที</div>
+                <div class="detail-content">
+                    <h3>2. จำเลยแถลง</h3>
+                    <p>ทีม กกต. แถลงจุดยืน — โทน: ทำงานดี เพอร์เฟกต์ สุจริต โปร่งใสเที่ยงธรรม มีปัญหาเล็กน้อยแต่แก้หมดแล้ว</p>
+                </div>
+            </div>
+            <div class="detail-block detail-emphasis">
+                <div class="detail-time">5 นาที</div>
+                <div class="detail-content">
+                    <h3>3. โจทก์แย้ง</h3>
+                    <p>ทีมประชาชนแย้ง ชี้ประเด็นความผิดปกติ</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">09 / 14</div>
+</section>
+
+<!-- ============================================================
+     SLIDE 10 — DEBATE (40 min)
+     ============================================================ -->
+<section class="slide" id="slide-10" data-slide="10">
+    <div class="glow-green"></div>
+    <div class="glow-red"></div>
+    <div class="slide-inner">
+        <h2 class="slide-title" style="font-size: clamp(1.8rem, 4.5vw, 3rem);">ช่วง<span class="accent-green">ถก</span><span class="accent-red">กัน</span></h2>
+        <p class="slide-subtitle" style="font-size: clamp(1.2rem, 2vw, 1.6rem); color: #fff; font-weight:700;">40 นาที — ก้อนหลัก</p>
+        <div class="detail-blocks" style="max-width: 650px;">
+            <div class="detail-block detail-emphasis" style="border-color: rgba(57,255,20,0.15) !important; flex-direction: column; align-items: center; text-align: center; padding: clamp(1.2rem, 2.5vh, 2rem);">
+                <div class="detail-content">
+                    <h3 style="font-size: clamp(1rem, 1.6vw, 1.3rem); margin-bottom: 0.5em;">เริ่มทีละคนถาม-ตอบ</h3>
+                    <p style="font-size: clamp(0.8rem, 1.2vw, 0.95rem);">โจทก์ทีละคนตั้งคำถามกับทีม กกต.</p>
+                </div>
+                <div style="margin: clamp(0.5rem, 1vh, 0.8rem) 0; font-size: clamp(1rem, 1.5vw, 1.2rem); color: var(--muted);">&#9660;</div>
+                <div class="detail-content">
+                    <h3 style="font-size: clamp(1rem, 1.6vw, 1.3rem); margin-bottom: 0.5em;">เปิดถกแบบอิสระ</h3>
+                    <p style="font-size: clamp(0.8rem, 1.2vw, 0.95rem);">ทั้งสองฝ่ายถกกันอย่างเสรี ทวีความรุนแรง</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">10 / 14</div>
+</section>
+
+<!-- ============================================================
+     SLIDE 11 — AUDIENCE TIME (33 min)
+     ============================================================ -->
+<section class="slide" id="slide-11" data-slide="11">
+    <div class="glow-green"></div>
+    <div class="slide-inner">
+        <h2 class="slide-title">ช่วง<span class="accent-green">ประชาชน</span> <span style="font-size:0.6em; color:var(--secondary);">33 นาที</span></h2>
+        <p class="slide-subtitle">ก้อนที่ 5-6</p>
+        <div class="detail-blocks stagger">
+            <div class="detail-block detail-emphasis">
+                <div class="detail-time">30 นาที</div>
+                <div class="detail-content">
+                    <h3>5. คนดูยกมือถาม</h3>
+                    <p>กลุ่มเตรียมคำถามช่วยนำก่อน จากนั้นคนดูทั่วไปยกมือถามตอบได้เลย</p>
+                </div>
+            </div>
+            <div class="detail-block" style="border-color: rgba(57,255,20,0.3) !important;">
+                <div class="detail-time" style="font-size: clamp(0.8rem, 1.2vw, 1rem);">3 นาที</div>
+                <div class="detail-content">
+                    <h3 style="font-size: clamp(0.95rem, 1.4vw, 1.15rem);">6. ตะโกนแสดงพลัง</h3>
+                    <p>MC นำ — ประชาชนตะโกนคำตอบพร้อมกัน ปลดปล่อยพลัง</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">11 / 14</div>
+</section>
+
+<!-- ============================================================
+     SLIDE 12 — AUDIENCE PARTICIPATION
+     ============================================================ -->
+<section class="slide" id="slide-12" data-slide="12">
+    <div class="glow-green"></div>
+    <div class="slide-inner">
+        <h2 class="slide-title">การมีส่วนร่วมของ<span class="accent-green">ผู้ชม</span></h2>
+        <div class="participation-grid stagger">
+            <div class="participation-card" style="border-color: var(--green-border);">
+                <div class="participation-icon" style="font-size: clamp(1.2rem, 2.5vw, 1.8rem);">&#9997;</div>
+                <div class="participation-title accent-green">กลุ่มเตรียมคำถาม</div>
+                <div class="participation-desc">ประชาชนที่เตรียมมาล่วงหน้า ช่วยนำคำถามก่อน</div>
+            </div>
+            <div class="participation-card">
+                <div class="participation-icon" style="font-size: clamp(1.2rem, 2.5vw, 1.8rem);">&#9995;</div>
+                <div class="participation-title">คนดูทั่วไป</div>
+                <div class="participation-desc">ยกมือถามตอบได้เลย ไม่ต้องเตรียมมาก่อน</div>
+            </div>
+            <div class="participation-card">
+                <div class="participation-icon" style="font-size: clamp(1.2rem, 2.5vw, 1.8rem);">&#128266;</div>
+                <div class="participation-title">เสียง</div>
+                <div class="participation-desc">ขวดน้ำ ปรบมือ เป่าปาก — ส่งเสียงได้ตลอดงาน</div>
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">12 / 14</div>
+</section>
+
+<!-- ============================================================
+     SLIDE 13 — SHOUTS
+     ============================================================ -->
+<section class="slide" id="slide-13" data-slide="13">
+    <div class="glow-green"></div>
+    <div class="glow-red"></div>
+    <div class="slide-inner">
+        <h2 class="slide-title" style="margin-bottom: clamp(1.5rem, 4vh, 2.5rem);">คำตะโกน<span class="accent-green">ปิดท้าย</span></h2>
+        <div class="shouts stagger">
+            <div class="shout">"ติดคุก!"</div>
+            <div class="shout">"หัวกรวย!"</div>
+            <div class="shout">"เลือกตั้งแบบนี้ให้พ่อมรึงจิ้มมาเองเลยดีกว่า!"</div>
+        </div>
+    </div>
+    <div class="slide-number">13 / 14</div>
+</section>
+
+<!-- ============================================================
+     SLIDE 14 — CLOSING
+     ============================================================ -->
+<section class="slide" id="slide-14" data-slide="14">
+    <div class="glow-green"></div>
+    <div class="glow-red"></div>
+    <div class="slide-inner">
+        <div class="versus-row">
+            <div class="team">
+                <div class="team-label">โจทก์</div>
+                <div class="team-name accent-green">ประชาชน</div>
+            </div>
+            <div class="vs-badge">VS</div>
+            <div class="team">
+                <div class="team-label">จำเลย</div>
+                <div class="team-name accent-red">กกต.</div>
+            </div>
+        </div>
+        <h1 class="title-h1">ไต่สวน<span class="highlight-green">สาธารณะ</span></h1>
+        <div class="info-row">
+            <div class="info-item">
+                <strong>25 ก.พ. 2026</strong>
+                18:00 น.
+            </div>
+            <div class="info-item">
+                <strong>หอศิลป์ BACC</strong>
+                กรุงเทพฯ
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">14 / 14</div>
+</section>
+
+<!-- ============================================================
+     JAVASCRIPT — Navigation, Intersection Observer, Touch/Swipe
+     ============================================================ -->
+<script>
+(function() {
+    'use strict';
+
+    const TOTAL_SLIDES = 14;
+    const slides = document.querySelectorAll('.slide');
+    const progressBar = document.getElementById('progressBar');
+    const navDotsContainer = document.getElementById('navDots');
+
+    // ──────────────────────────────────────
+    // Build navigation dots
+    // ──────────────────────────────────────
+    for (let i = 0; i < TOTAL_SLIDES; i++) {
+        const dot = document.createElement('button');
+        dot.className = 'nav-dot';
+        dot.setAttribute('aria-label', 'ไปยังสไลด์ ' + (i + 1));
+        dot.dataset.slide = i;
+        dot.addEventListener('click', function() {
+            slides[i].scrollIntoView({ behavior: 'smooth' });
+        });
+        navDotsContainer.appendChild(dot);
+    }
+
+    const navDots = document.querySelectorAll('.nav-dot');
+
+    // ──────────────────────────────────────
+    // Intersection Observer — visibility + active dot
+    // ──────────────────────────────────────
+    let currentSlide = 0;
+
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                const idx = parseInt(entry.target.dataset.slide) - 1;
+                currentSlide = idx;
+                updateUI(idx);
+            }
+        });
+    }, {
+        threshold: 0.5
+    });
+
+    slides.forEach(function(slide) {
+        observer.observe(slide);
+    });
+
+    function updateUI(idx) {
+        // Update dots
+        navDots.forEach(function(dot, i) {
+            dot.classList.toggle('active', i === idx);
+        });
+        // Update progress bar
+        var progress = ((idx + 1) / TOTAL_SLIDES) * 100;
+        progressBar.style.width = progress + '%';
+    }
+
+    // ──────────────────────────────────────
+    // Keyboard navigation
+    // ──────────────────────────────────────
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+            e.preventDefault();
+            navigateTo(currentSlide + 1);
+        } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'PageUp') {
+            e.preventDefault();
+            navigateTo(currentSlide - 1);
+        } else if (e.key === 'Home') {
+            e.preventDefault();
+            navigateTo(0);
+        } else if (e.key === 'End') {
+            e.preventDefault();
+            navigateTo(TOTAL_SLIDES - 1);
+        }
+    });
+
+    function navigateTo(idx) {
+        if (idx < 0) idx = 0;
+        if (idx >= TOTAL_SLIDES) idx = TOTAL_SLIDES - 1;
+        slides[idx].scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // ──────────────────────────────────────
+    // Touch / swipe support
+    // ──────────────────────────────────────
+    var touchStartY = 0;
+    var touchStartX = 0;
+    var touchEndY = 0;
+    var touchEndX = 0;
+    var touchStartTime = 0;
+
+    document.addEventListener('touchstart', function(e) {
+        touchStartY = e.changedTouches[0].screenY;
+        touchStartX = e.changedTouches[0].screenX;
+        touchStartTime = Date.now();
+    }, { passive: true });
+
+    document.addEventListener('touchend', function(e) {
+        touchEndY = e.changedTouches[0].screenY;
+        touchEndX = e.changedTouches[0].screenX;
+
+        var deltaY = touchStartY - touchEndY;
+        var deltaX = touchStartX - touchEndX;
+        var elapsed = Date.now() - touchStartTime;
+
+        // Only respond to vertical swipes (not horizontal), with minimum distance and speed
+        if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 50 && elapsed < 500) {
+            if (deltaY > 0) {
+                navigateTo(currentSlide + 1);
+            } else {
+                navigateTo(currentSlide - 1);
+            }
+        }
+    }, { passive: true });
+
+    // ──────────────────────────────────────
+    // Initial state — mark first slide visible
+    // ──────────────────────────────────────
+    slides[0].classList.add('visible');
+    updateUI(0);
+
+})();
+</script>
+
+</body>
+</html>
