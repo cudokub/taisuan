@@ -108,6 +108,7 @@ imggen "prompt" -r ref.jpg --raw
 │   ├── neng_tune.jpg      # เหน่ง Tune & Co.
 │   ├── neng_taxi.jpg      # พี่เหน่ง Taxi
 │   ├── jiw.jpg            # พี่จิ๋ว Call
+│   ├── cha.jpg            # ทนายชา รุ่งโรจน์เรืองฉาย
 │   ├── badge-ggt.jpg      # ป้ายห้อยคอ กกต.
 │   └── badge-jotok.jpg    # ป้ายห้อยคอ โจทก์
 ├── .github/workflows/
