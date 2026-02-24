@@ -104,7 +104,7 @@ imggen "prompt" -r ref.jpg --raw
 │   ├── nimit.jpg          # พี่นิมิตร์ เครือข่ายฯ
 │   ├── mai.jpg            # มาย ภัสฯ (MC ร่วม)
 │   ├── pao.jpg            # เป๋า iLaw
-│   ├── ou.jpg             # อู๋ ครช. (MC ร่วม)
+│   ├── ou.jpg             # อู๋ DayBreaker (MC ร่วม)
 │   ├── neng_tune.jpg      # เหน่ง Tune & Co.
 │   ├── neng_taxi.jpg      # พี่เหน่ง Taxi
 │   ├── jiw.jpg            # พี่จิ๋ว Call
