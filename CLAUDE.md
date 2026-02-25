@@ -16,7 +16,7 @@
 - `HANDOFF.md` — สรุปการทำงาน, สถานะปัจจุบัน, technical notes (อ่านก่อน session ใหม่)
 - `presentation.html` — Team briefing presentation (zero-dependency HTML, 14 slides)
 - `stage-concept.jpg` — Concept art ลาน BACC (Mood & Tone เท่านั้น)
-- `photos/` — รูปถ่ายผู้แสดงทั้ง 10 คน (1:1 square, JPEG) + รูปป้ายห้อยคอ
+- `photos/` — รูปถ่ายผู้แสดงทั้ง 11 คน (1:1 square, JPEG) + รูปป้ายห้อยคอ
 - `CLAUDE.md` — ไฟล์นี้ คำแนะนำโปรเจกต์
 
 ## Deployment

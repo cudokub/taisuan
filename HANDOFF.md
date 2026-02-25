@@ -52,7 +52,7 @@
 
 ### เสร็จแล้ว
 - [x] EVENT.md — เอกสารภาพรวมอีเวนต์ครบ
-- [x] presentation.html — 14 slides, มีรูปผู้แสดง 10 คน + concept art + ป้ายห้อยคอ
+- [x] presentation.html — 14 slides, มีรูปผู้แสดง 11 คน + concept art + ป้ายห้อยคอ
 - [x] Concept art ลาน BACC ไม่มีเวที (stage-concept.jpg)
 - [x] Deploy บน GitHub Pages ใช้งานได้
 - [x] Feedback รอบแรก (เวลา, ชื่อ, บทบาท, sequence, ตัด มิ้น Vote 62)
@@ -125,7 +125,7 @@ imggen "prompt" -r ref.jpg --raw
 | 1 | Title | ประชาชน VS กกต. ไต่สวนสาธารณะ |
 | 2 | เป้าหมาย | 3 ข้อ |
 | 3 | ประเด็นไต่สวน | 3 ข้อกล่าวหา (ลองวางไว้) |
-| 4 | ทีมโจทก์ | 5 คน + รูป |
+| 4 | ทีมโจทก์ | 6 คน + รูป |
 | 5 | ทีมจำเลย | 5 คน + รูป |
 | 6 | พิธีกร | อู๋ + มาย + รูป |
 | 7 | เวที & อุปกรณ์ | Concept art + props list + ป้ายห้อยคอ |
