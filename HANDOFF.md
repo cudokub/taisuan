@@ -100,7 +100,7 @@ imggen "prompt" -r ref.jpg --raw
 ├── photos/
 │   ├── nuhring.jpg        # พี่หนูหริ่ง สมบัติ บุญงามอนงค์
 │   ├── seen.jpg           # ซีน ThumbRights
-│   ├── tum.jpg            # อาจารย์ตั้ม จิรวุธ
+│   ├── tum.jpg            # อ.ตั้ม จิรวัฒน์
 │   ├── nimit.jpg          # พี่นิมิตร์ เครือข่ายฯ
 │   ├── mai.jpg            # มาย ภัสฯ (MC ร่วม)
 │   ├── pao.jpg            # เป๋า iLaw
